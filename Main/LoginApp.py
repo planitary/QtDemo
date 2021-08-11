@@ -30,7 +30,9 @@ class LoginApp(LoginUI.LoginForm):
             msg_box.exec_()
             self.pwdEdit.clear()
         else:
-            print('µÇÂ¼³É¹¦')
+            msg = '»¶Ó­%s' % user
+            welcomeBox = QMessageBox(QMessageBox.Information,'»¶Ó­',msg)
+            welcomeBox.exec()
 
 
 if __name__ == '__main__':
