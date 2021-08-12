@@ -1,5 +1,6 @@
 # coding:gbk
-from PyQt5 import QtCore,QtGui,QtWidgets,Qt
+from PyQt5 import QtGui,QtWidgets,Qt
+from Extra.MyQlabel import MyQLabel
 
 class LoginForm(object):
     def setupUI(self,Widget):
@@ -31,7 +32,7 @@ class LoginForm(object):
         # 登录表单整体样式
         self.loginWidget = QtWidgets.QWidget(Widget)
         self.loginWidget.move(0,140)                         # 登录表单位置
-        self.loginWidget.setGeometry(0,140,650,260)              # 登录表达widget大小
+        self.loginWidget.setGeometry(0,140,650,200)              # 登录表达widget大小
         hbox = QtWidgets.QHBoxLayout()                            # 登录表单水平布局，左侧为logo，右侧为表单
 
         # 登录表单左侧logo
@@ -48,10 +49,12 @@ class LoginForm(object):
         self.usernameLabel.setFont(QtGui.QFont('Microsoft YaHei'))
         self.usernameEdit = QtWidgets.QLineEdit()
         self.usernameEdit.setFixedSize(270,38)                   # 限制表单布局右侧文本框的大小
+        self.usernameEdit.setPlaceholderText('请输入用户名')
         self.pwdLabel = QtWidgets.QLabel('密码:')
         self.pwdLabel.setFont(QtGui.QFont("Microsoft YaHei"))
         self.pwdEdit = QtWidgets.QLineEdit()
         self.pwdEdit.setFixedSize(270,38)
+        self.pwdEdit.setPlaceholderText('请输入密码')
         self.pwdEdit.setEchoMode(QtWidgets.QLineEdit.Password)              # 设置文本框输入模式为暗文
         self.btnLogin = QtWidgets.QPushButton('登录')
         self.btnLogin.setFixedSize(270,40)
@@ -60,9 +63,11 @@ class LoginForm(object):
         self.btnLogin.setStyleSheet('#loginbtn{'             
                                'background-color:#2c7adf;color:#fff;border-radius:4px;}')      # 按钮边框圆角
 
+
         self.formLayout.addRow(self.usernameLabel,self.usernameEdit)
         self.formLayout.addRow(self.pwdLabel,self.pwdEdit)
         self.formLayout.addWidget(self.btnLogin)                           # 登录按钮添加进表单布局
+        # self.formLayout.addWidget(self.regLabel)
         hbox.setAlignment(Qt.Qt.AlignCenter)
 
         # 调整表单间距
@@ -70,8 +75,24 @@ class LoginForm(object):
         self.formLayout.setVerticalSpacing(12)           # 不同组间垂直间隔
 
         hbox.addLayout(self.formLayout,2)                # 右侧表单添加进整体水平布局中
-        self.loginWidget.setLayout(hbox)
 
+        self.regLabel = MyQLabel(Widget)               # 注册标签
+        # 富文本，Qlabel使用setTextFormat来指定展示纯文本还是富文本
+        regHtml = '''
+                    <font color='#8a8a8a' size ='3'>还没账号?去注册</font>
+                     <img src = '../ICO/右箭头_new.png' height='22' weight ='12'
+                     style="vertical-align:top;">'''
+        self.regLabel.setText(regHtml)
+        self.regLabel.setTextFormat(Qt.Qt.RichText)
+        self.regLabel.setObjectName('regLabel')
+        self.regLabel.setStyleSheet('#regLabel{'
+                                    'color:grey;font-size:14px;}')
+        # self.regLabel.setIndent(66)
+        self.regLabel.setFixedSize(130,20)
+        self.regLabel.setCursor(Qt.Qt.PointingHandCursor)               # 鼠标悬浮样式
+        self.regLabel.move(346,320)
+
+        self.loginWidget.setLayout(hbox)
         self.center(Widget)
 
     def center(self,Widget):
