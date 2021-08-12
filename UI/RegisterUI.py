@@ -98,7 +98,6 @@ class Reg(QtWidgets.QWidget):
 
         self.RegloginWidget.setLayout(hbox)
         self.Regcenter()
-        self.show()
 
     def Regcenter(self):
         """返回父窗口的几何形状大小，当窗口为顶级窗口，返回屏幕大小,Qwidget继承自QMainWindow，顶级窗口为QMainWindow，LoginFrame

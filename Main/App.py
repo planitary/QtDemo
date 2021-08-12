@@ -15,9 +15,9 @@ class Reg(RegisterUI.Reg):
         print(123)
 
 class App(LoginUI.LoginForm):
-    def __init__(self,Widget):
+    def __init__(self):
         super(App, self).__init__()
-        self.setupUI(Widget)
+        self.setupUI()
         self.Action()
 
     def Action(self):
@@ -51,16 +51,16 @@ class App(LoginUI.LoginForm):
                 welcomeBox.exec()
 
     def Register(self):
-        QCoreApplication.instance().quit()              # 关闭当前窗口
-        RegEx = Reg()
-        print(12)
+        """由于窗口在当前类中循环，所以新窗口需要实例化到当前类中"""
+        self.close()                # 关闭登录窗口，打开注册窗口
+        self.RegEx = Reg()
+        self.RegEx.show()
 
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex_ = QWidget()
-    ex = App(ex_)
-    ex_.show()
+    ex = App()
     # RegEx = Reg()
+    # RegEx.show()
     sys.exit(app.exec_())

@@ -2,25 +2,25 @@
 from PyQt5 import QtGui,QtWidgets,Qt
 from Extra.MyQlabel import MyQLabel
 
-class LoginForm(object):
-    def setupUI(self,Widget):
-        Widget.setObjectName("loginWindow")
-        Widget.setStyleSheet("#loginWindow{"
+class LoginForm(QtWidgets.QWidget):
+    def setupUI(self):
+        self.setObjectName("loginWindow")
+        self.setStyleSheet("#loginWindow{"
                            "background-color:white}")
-        Widget.setFixedSize(650,400)
-        Widget.setWindowTitle('登录')
-        Widget.setWindowIcon(QtGui.QIcon("../ICO/咖啡.png"))
+        self.setFixedSize(650,400)
+        self.setWindowTitle('登录')
+        self.setWindowIcon(QtGui.QIcon("../ICO/咖啡.png"))
 
         self.text = '用户登录'
 
         #顶部logo
         self.topPic = QtGui.QPixmap("../ICO/登录.webp")
         scaredTopPic = self.topPic.scaled(650,140)           # 按照大小切割图片
-        self.label = QtWidgets.QLabel(Widget)
+        self.label = QtWidgets.QLabel(self)
         self.label.setPixmap(scaredTopPic)                   # 将图片填充到顶部label
 
         #顶部文字
-        self.topMsg = QtWidgets.QLabel(Widget)
+        self.topMsg = QtWidgets.QLabel(self)
         self.topMsg.setText(self.text)
         self.topMsg.setStyleSheet("QWidget{"
                              "color:white;font-weight:600;background:transparent;font-size:30px;}")
@@ -30,13 +30,13 @@ class LoginForm(object):
         self.topMsg.raise_()
 
         # 登录表单整体样式
-        self.loginWidget = QtWidgets.QWidget(Widget)
+        self.loginWidget = QtWidgets.QWidget(self)
         self.loginWidget.move(0,140)                         # 登录表单位置
         self.loginWidget.setGeometry(0,140,580,200)              # 登录表单widget大小
         hbox = QtWidgets.QHBoxLayout()                            # 登录表单水平布局，左侧为logo，右侧为表单
 
         # 登录表单左侧logo
-        self.leftLogo = QtWidgets.QLabel(Widget)
+        self.leftLogo = QtWidgets.QLabel(self)
         self.leftLogoPic = QtGui.QPixmap('../ICO/logo.webp')
         scaredLogo = self.leftLogoPic.scaled(160,120)
         self.leftLogo.setPixmap(scaredLogo)
@@ -76,7 +76,7 @@ class LoginForm(object):
 
         hbox.addLayout(self.formLayout,2)                # 右侧表单添加进整体水平布局中
 
-        self.regLabel = MyQLabel(Widget)               # 注册标签
+        self.regLabel = MyQLabel(self)               # 注册标签
         # 富文本，Qlabel使用setTextFormat来指定展示纯文本还是富文本
         regHtml = '''
                     <font color='#8a8a8a' size ='3'>还没账号?去注册</font>
@@ -93,13 +93,14 @@ class LoginForm(object):
         self.regLabel.move(346,320)
 
         self.loginWidget.setLayout(hbox)
-        self.center(Widget)
+        self.center()
+        self.show()
 
-    def center(self,Widget):
+    def center(self):
         """返回父窗口的几何形状大小，当窗口为顶级窗口，返回屏幕大小,Qwidget继承自QMainWindow，顶级窗口为QMainWindow，LoginFrame
         继承自Qwidget，这里返回父类Qwidget大小，其大小在构造函数中指定为650*400
         实则这里创立了一个和登录窗体一样大小的无形矩形"""
-        qr = Widget.frameGeometry()
+        qr = self.frameGeometry()
         # print(qr)
         # 返回可用屏幕大小（不含任务栏等）center()锁定返回值的中心,得到整体屏幕的中心点
         cp = QtWidgets.QDesktopWidget().availableGeometry().center()
@@ -108,7 +109,7 @@ class LoginForm(object):
         # 保持该矩形大小不变，将其中心(movecenter)移动到屏幕中心点
         qr.moveCenter(cp)
         # 由于矩形在屏幕中心，故将LoginFrame窗体左上角移动到无形矩形左上角后，整个窗体就在屏幕中心了
-        Widget.move(qr.topLeft())
+        self.move(qr.topLeft())
 
 
 
