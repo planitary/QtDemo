@@ -16,11 +16,11 @@ class Reg(QtWidgets.QWidget):
         #顶部logo
         self.RegtopPic = QtGui.QPixmap("../ICO/登录.webp")
         scaredTopPic = self.RegtopPic.scaled(650,140)           # 按照大小切割图片
-        self.Reglabel = QtWidgets.QLabel()
+        self.Reglabel = QtWidgets.QLabel(self)
         self.Reglabel.setPixmap(scaredTopPic)                   # 将图片填充到顶部label
 
         #顶部文字
-        self.RegtopMsg = QtWidgets.QLabel()
+        self.RegtopMsg = QtWidgets.QLabel(self)
         self.RegtopMsg.setText(self.Regtext)
         self.RegtopMsg.setStyleSheet("QWidget{"
                              "color:white;font-weight:600;background:transparent;font-size:30px;}")
@@ -30,13 +30,13 @@ class Reg(QtWidgets.QWidget):
         self.RegtopMsg.raise_()
 
         # 注册表单整体样式
-        self.RegloginWidget = QtWidgets.QWidget()
+        self.RegloginWidget = QtWidgets.QWidget(self)
         self.RegloginWidget.move(0,140)                         # 注册表单位置
-        self.RegloginWidget.setGeometry(0,140,650,200)              # 注册表达widget大小
+        self.RegloginWidget.setGeometry(0,140,580,220)              # 注册表达widget大小
         hbox = QtWidgets.QHBoxLayout()                            # 注册表单水平布局，左侧为logo，右侧为表单
 
         # 注册表单左侧logo
-        self.RegleftLogo = QtWidgets.QLabel()
+        self.RegleftLogo = QtWidgets.QLabel(self)
         self.RegleftLogoPic = QtGui.QPixmap('../ICO/logo.webp')
         scaredLogo = self.RegleftLogoPic.scaled(160,120)
         self.RegleftLogo.setPixmap(scaredLogo)
@@ -80,7 +80,7 @@ class Reg(QtWidgets.QWidget):
 
         hbox.addLayout(self.RegformLayout,2)                # 右侧表单添加进整体水平布局中
 
-        self.RegregLabel = MyQLabel()               # 注册标签
+        self.RegregLabel = MyQLabel(self)               # 注册标签
         # 富文本，Qlabel使用setTextFormat来指定展示纯文本还是富文本
         regHtml = '''
                     <font color='#8a8a8a' size ='3'>已有账号?去登录</font>
@@ -94,7 +94,7 @@ class Reg(QtWidgets.QWidget):
         # self.RegregLabel.setIndent(66)
         self.RegregLabel.setFixedSize(130,20)
         self.RegregLabel.setCursor(Qt.Qt.PointingHandCursor)               # 鼠标悬浮样式
-        self.RegregLabel.move(346,320)
+        self.RegregLabel.move(366,350)
 
         self.RegloginWidget.setLayout(hbox)
         self.Regcenter()

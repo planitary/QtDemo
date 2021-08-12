@@ -32,7 +32,7 @@ class LoginForm(object):
         # 登录表单整体样式
         self.loginWidget = QtWidgets.QWidget(Widget)
         self.loginWidget.move(0,140)                         # 登录表单位置
-        self.loginWidget.setGeometry(0,140,650,200)              # 登录表达widget大小
+        self.loginWidget.setGeometry(0,140,580,200)              # 登录表单widget大小
         hbox = QtWidgets.QHBoxLayout()                            # 登录表单水平布局，左侧为logo，右侧为表单
 
         # 登录表单左侧logo

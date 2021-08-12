@@ -3,10 +3,10 @@ import sys
 from PyQt5.QtWidgets import QWidget,QMessageBox,QApplication
 from PyQt5.QtCore import QCoreApplication
 from Controller.DController import LoginController
-from UI import LoginUI,Register
+from UI import LoginUI,RegisterUI
 
 
-class Reg(Register.Reg):
+class Reg(RegisterUI.Reg):
     def __init__(self):
         super(Reg, self).__init__()
         self.setupUI()
@@ -53,15 +53,14 @@ class App(LoginUI.LoginForm):
     def Register(self):
         QCoreApplication.instance().quit()              # 关闭当前窗口
         RegEx = Reg()
-        RegEx.setupUI()
-        RegEx.show()
+        print(12)
 
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    # ex_ = QWidget()
-    # ex = App(ex_)
-    # ex_.show()
-    RegEx = Reg()
+    ex_ = QWidget()
+    ex = App(ex_)
+    ex_.show()
+    # RegEx = Reg()
     sys.exit(app.exec_())
