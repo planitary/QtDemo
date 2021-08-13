@@ -45,26 +45,30 @@ class Reg(QtWidgets.QWidget):
 
         #注册表单右侧表单
         self.RegformLayout = QtWidgets.QFormLayout()
-        self.RegusernameLabel = QtWidgets.QLabel('用户名:')
+        self.RegusernameLabel = QtWidgets.QLabel('用  户 名:')
         self.RegusernameLabel.setFont(QtGui.QFont('Microsoft YaHei'))
         self.RegusernameEdit = QtWidgets.QLineEdit()
-        self.RegusernameEdit.setFixedSize(270,38)                   # 限制表单布局右侧文本框的大小
-        self.RegpwdLabel = QtWidgets.QLabel('密码:')
+        self.RegusernameEdit.setPlaceholderText('请输入用户名')
+        self.RegusernameEdit.setFixedSize(270,35)                   # 限制表单布局右侧文本框的大小
+        self.RegpwdLabel = QtWidgets.QLabel('密      码:')
         self.RegpwdLabel.setFont(QtGui.QFont("Microsoft YaHei"))
         self.RegpwdEdit = QtWidgets.QLineEdit()
-        self.RegpwdEdit.setFixedSize(270,38)
+        self.RegpwdEdit.setFixedSize(270,35)
+        self.RegpwdEdit.setPlaceholderText('请输入密码')
         self.RegpwdEdit.setEchoMode(QtWidgets.QLineEdit.Password)              # 设置文本框输入模式为暗文
         self.RegpwdConfirmLabel = QtWidgets.QLabel('确认密码:')
         self.RegpwdConfirmLabel.setFont(QtGui.QFont('Microsoft YaHei'))
         self.RegpwdConfirmEdit = QtWidgets.QLineEdit()
-        self.RegpwdConfirmEdit.setFixedSize(270,38)
+        self.RegpwdConfirmEdit.setPlaceholderText('请再次输入密码')
+        self.RegpwdConfirmEdit.setFixedSize(270,35)
         self.RegpwdConfirmEdit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.RegbtnLogin = QtWidgets.QPushButton('注册')
-        self.RegbtnLogin.setFixedSize(270,40)
+        self.RegbtnLogin.setFixedSize(270,37)
         self.RegbtnLogin.setFont(QtGui.QFont('Microsoft YaHei'))
         self.RegbtnLogin.setObjectName('loginbtn')
         self.RegbtnLogin.setStyleSheet('#loginbtn{'             
                                'background-color:#2c7adf;color:#fff;border-radius:4px;}')      # 按钮边框圆角
+        self.RegbtnLogin.setCursor(Qt.Qt.PointingHandCursor)
 
 
         self.RegformLayout.addRow(self.RegusernameLabel,self.RegusernameEdit)
@@ -75,7 +79,7 @@ class Reg(QtWidgets.QWidget):
         hbox.setAlignment(Qt.Qt.AlignCenter)
 
         # 调整表单间距
-        self.RegformLayout.setHorizontalSpacing(20)    # 组内标签和文本框的间隔
+        self.RegformLayout.setHorizontalSpacing(10)    # 组内标签和文本框的间隔
         self.RegformLayout.setVerticalSpacing(12)           # 不同组间垂直间隔
 
         hbox.addLayout(self.RegformLayout,2)                # 右侧表单添加进整体水平布局中
@@ -94,7 +98,7 @@ class Reg(QtWidgets.QWidget):
         # self.RegregLabel.setIndent(66)
         self.RegregLabel.setFixedSize(130,20)
         self.RegregLabel.setCursor(Qt.Qt.PointingHandCursor)               # 鼠标悬浮样式
-        self.RegregLabel.move(366,350)
+        self.RegregLabel.move(336,350)
 
         self.RegloginWidget.setLayout(hbox)
         self.Regcenter()

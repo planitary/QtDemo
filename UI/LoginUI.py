@@ -48,20 +48,21 @@ class LoginForm(QtWidgets.QWidget):
         self.usernameLabel = QtWidgets.QLabel('用户名:')
         self.usernameLabel.setFont(QtGui.QFont('Microsoft YaHei'))
         self.usernameEdit = QtWidgets.QLineEdit()
-        self.usernameEdit.setFixedSize(270,38)                   # 限制表单布局右侧文本框的大小
+        self.usernameEdit.setFixedSize(270,35)                   # 限制表单布局右侧文本框的大小
         self.usernameEdit.setPlaceholderText('请输入用户名')
-        self.pwdLabel = QtWidgets.QLabel('密码:')
+        self.pwdLabel = QtWidgets.QLabel('密   码:')
         self.pwdLabel.setFont(QtGui.QFont("Microsoft YaHei"))
         self.pwdEdit = QtWidgets.QLineEdit()
-        self.pwdEdit.setFixedSize(270,38)
+        self.pwdEdit.setFixedSize(270,35)
         self.pwdEdit.setPlaceholderText('请输入密码')
         self.pwdEdit.setEchoMode(QtWidgets.QLineEdit.Password)              # 设置文本框输入模式为暗文
         self.btnLogin = QtWidgets.QPushButton('登录')
-        self.btnLogin.setFixedSize(270,40)
+        self.btnLogin.setFixedSize(270,37)
         self.btnLogin.setFont(QtGui.QFont('Microsoft YaHei'))
         self.btnLogin.setObjectName('loginbtn')
         self.btnLogin.setStyleSheet('#loginbtn{'             
                                'background-color:#2c7adf;color:#fff;border-radius:4px;}')      # 按钮边框圆角
+        self.btnLogin.setCursor(Qt.Qt.PointingHandCursor)
 
 
         self.formLayout.addRow(self.usernameLabel,self.usernameEdit)
@@ -71,7 +72,7 @@ class LoginForm(QtWidgets.QWidget):
         hbox.setAlignment(Qt.Qt.AlignCenter)
 
         # 调整表单间距
-        self.formLayout.setHorizontalSpacing(20)    # 组内标签和文本框的间隔
+        self.formLayout.setHorizontalSpacing(10)    # 组内标签和文本框的间隔
         self.formLayout.setVerticalSpacing(12)           # 不同组间垂直间隔
 
         hbox.addLayout(self.formLayout,2)                # 右侧表单添加进整体水平布局中
@@ -90,7 +91,7 @@ class LoginForm(QtWidgets.QWidget):
         # self.regLabel.setIndent(66)
         self.regLabel.setFixedSize(130,20)
         self.regLabel.setCursor(Qt.Qt.PointingHandCursor)               # 鼠标悬浮样式
-        self.regLabel.move(346,320)
+        self.regLabel.move(336,320)
 
         self.loginWidget.setLayout(hbox)
         self.center()
