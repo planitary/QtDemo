@@ -5,7 +5,7 @@
 
 ---
 V0.0.4.2
--*1、增加了注册逻辑，现在可以注册并登录了<br/>
+-*1、增加了注册逻辑，现在可以注册并登录了 <br/>
 2、数据库语句需要修改：alter table users change balance phonNumber varchar(20)*
 
 V0.0.3
