@@ -1,0 +1,5 @@
+# coding:gbk
+from pygoogletranslation import Translator
+
+tr = Translator()
+print(tr.translate('ĞÇÆÚÈÕ',dest='en').text)

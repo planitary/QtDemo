@@ -1,10 +1,10 @@
 # coding:gbk
 import sys
-from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication
+from PyQt5.QtWidgets import  QMessageBox, QApplication
 from PyQt5.QtCore import QCoreApplication
 from Controller.DController import LoginController,RegController
-from UI import LoginUI, RegisterUI
-
+from UI import LoginUI, RegisterUI,TranslateUI
+from Extra.GoogleTrans import GoogleTrans
 
 class App(LoginUI.LoginForm):
     def __init__(self):
@@ -104,10 +104,51 @@ class Reg(RegisterUI.Reg):
         self.LoginEx = App()
         self.LoginEx.show()
 
+class TranslateWindow(TranslateUI.TranslateMainWindow):
+    _language = ''
+    def __init__(self):
+        super(TranslateWindow, self).__init__()
+        self.setupUi()
+        self.translateAction()
+
+    def translateAction(self):
+        self.button.clicked.connect(self.Translate)
+
+    def Translate(self):
+        # 获取文本框内的内容
+        originalText = self.plainTextEdit.toPlainText()
+        # 判断当前下拉框得值
+        if self.comboBox.currentText() == '英语':
+            self._language = 'en'
+        elif self.comboBox.currentText() == '日语':
+            self._language = 'ja'
+        elif self.comboBox.currentText() == '中文':
+            self._language = 'zh-CN'
+
+        if originalText != '':
+            """这个方法访问过慢，偶尔会遇到429的异常"""
+            # print(originalText)
+            """调用GoogleTrans接口，此接口来自‘https://github.com/VictorZhang2014/free-google-translate’,感谢.
+            接口使用：query方法第一个参数表示要翻译的文字，第二个参数表示要翻译的语言
+            返回参数说明：第一个值源语言，第二个为源语言种类，第三个为目标语言，第四个为目标语言种类"""
+            transRe = GoogleTrans().query(originalText,lang_to=self._language)
+            target = transRe[2]
+            original = transRe[0]
+            self.translateText.setPlainText(target)
+            # translator = Translator(service_url=['translate.google.cn',])
+            # target = translator.translate(originalText, dest=self._language)
+            # print(target)
+        else:
+            self.plainTextEdit.setPlaceholderText('您还没有输入内容')
+
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = App()
+    # ex = App()
+    ex = TranslateWindow()
+    ex.show()
     # RegEx = Reg()
     # RegEx.show()
     sys.exit(app.exec_())

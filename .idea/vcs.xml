@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Extra/free-google-translate" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/free-google-translate" vcs="Git" />
   </component>
 </project>

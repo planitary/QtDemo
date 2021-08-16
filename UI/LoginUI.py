@@ -1,6 +1,6 @@
 # coding:gbk
 from PyQt5 import QtGui,QtWidgets,Qt
-from Extra.MyQlabel import MyQLabel
+from Extra.MyAction import MyActionLabel
 
 class LoginForm(QtWidgets.QWidget):
     def setupUI(self):
@@ -77,7 +77,7 @@ class LoginForm(QtWidgets.QWidget):
 
         hbox.addLayout(self.formLayout,2)                # 右侧表单添加进整体水平布局中
 
-        self.regLabel = MyQLabel(self)               # 注册标签
+        self.regLabel = MyActionLabel(self)               # 注册标签
         # 富文本，Qlabel使用setTextFormat来指定展示纯文本还是富文本
         regHtml = '''
                     <font color='#8a8a8a' size ='3'>还没账号?去注册</font>

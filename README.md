@@ -4,6 +4,10 @@
 后期可能更新日志会在此处更新，也考虑会单独做更新日志系统
 
 ---
+
+V0.0.5
+-*增加了翻译功能*
+
 V0.0.4.2
 -*1、增加了注册逻辑，现在可以注册并登录了 <br/>
 2、数据库语句需要修改：alter table users change balance phoneNumber varchar(20)*
