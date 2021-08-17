@@ -28,7 +28,7 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
 
         # 源文本框字数统计标签
         self.countLabel = QtWidgets.QLabel(self.centralwidget)
-        self.countLabel.setGeometry(640,153,50,30)
+        self.countLabel.setGeometry(620,153,70,30)
 
 
 
