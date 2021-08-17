@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import  QMessageBox, QApplication
 from PyQt5.QtCore import QCoreApplication
 from Controller.DController import LoginController,RegController
 from UI import LoginUI, RegisterUI,TranslateUI
-from Extra.GoogleTrans import GoogleTrans
+from Extra.core import translate
 
 class App(LoginUI.LoginForm):
     def __init__(self):
@@ -126,18 +126,20 @@ class TranslateWindow(TranslateUI.TranslateMainWindow):
             self._language = 'zh-CN'
 
         if originalText != '':
-            """这个方法访问过慢，偶尔会遇到429的异常"""
-            # print(originalText)
-            """调用GoogleTrans接口，此接口来自‘https://github.com/VictorZhang2014/free-google-translate’,感谢.
-            接口使用：query方法第一个参数表示要翻译的文字，第二个参数表示要翻译的语言
-            返回参数说明：第一个值源语言，第二个为源语言种类，第三个为目标语言，第四个为目标语言种类"""
-            transRe = GoogleTrans().query(originalText,lang_to=self._language)
-            target = transRe[2]
-            original = transRe[0]
+            # """这个方法访问过慢，偶尔会遇到429的异常(备用版本)"""
+            # # print(originalText)
+            # """调用GoogleTrans接口，此接口来自‘https://github.com/VictorZhang2014/free-google-translate’,感谢.
+            # 接口使用：query方法第一个参数表示要翻译的文字，第二个参数表示要翻译的语言
+            # 返回参数说明：第一个值源语言，第二个为源语言种类，第三个为目标语言，第四个为目标语言种类"""
+            # transRe = GoogleTrans().query(originalText,lang_to=self._language)
+            # target = transRe[2]
+            # original = transRe[0]
+            # self.translateText.setPlainText(target)
+            """优化后使用此版本，此方法来自‘https://github.com/mouuff/mtranslate’，感谢
+            方法使用：第一个参数为要翻译的文字，第二个为目标语言，第三个为源语言，不输入则会自动识别
+            传参的语言缩写见static目录下的languageList文件"""
+            target = translate(originalText,self._language)
             self.translateText.setPlainText(target)
-            # translator = Translator(service_url=['translate.google.cn',])
-            # target = translator.translate(originalText, dest=self._language)
-            # print(target)
         else:
             self.plainTextEdit.setPlaceholderText('您还没有输入内容')
 
