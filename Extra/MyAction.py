@@ -1,5 +1,5 @@
 # coding:gbk
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore,QtGui
 
 """QLabel对象没有clicked()信号，需要自行定义，
 查看QLabel类可知其定义了事件，但没有具体写事件的内容，而PyQt5支持自定义信号，
@@ -23,14 +23,22 @@ class MyActionLabel(QtWidgets.QLabel):
 
 """重写QPlainText的focusOutEcent方法，在文本框失去焦点时触发事件"""
 class MyActionLineEdit(QtWidgets.QPlainTextEdit):
-    textFocusedOut = QtCore.pyqtSignal()
+    pass
+    # textFocusedOut = QtCore.pyqtSignal()
+    # def __init__(self, parent):
+    #     super(MyActionLineEdit, self).__init__(parent)
+    #
+    # def focusOutEvent(self, et) -> None:
+    #     self.textFocusedOut.emit()
+    #
+    # # 绑定槽函数
+    # def connetSlot(self, func):
+    #     self.textFocusedOut.connect(func)
 
-    def __init__(self, parent):
-        super(MyActionLineEdit, self).__init__(parent)
+    # """重写键盘监听事件，捕捉用户粘贴行为，用于判断粘贴进plainEditText的文本长度是否过长"""
+    # def keyPressEvent(self, event) -> None:
+    #     if event.matches(QtGui.QKeySequence.Paste):
+    #         print('bye')
 
-    def focusOutEvent(self, et) -> None:
-        self.textFocusedOut.emit()
 
-    # 绑定槽函数
-    def connetSlot(self, func):
-        self.textFocusedOut.connect(func)
+

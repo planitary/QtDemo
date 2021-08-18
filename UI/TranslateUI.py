@@ -28,9 +28,19 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
 
         # 源文本框字数统计标签
         self.countLabel = QtWidgets.QLabel(self.centralwidget)
-        self.countLabel.setGeometry(620,153,70,30)
+        self.countLabel.setGeometry(640,153,70,30)
+        countSize = '0/9999'
+        self.countLabel.setText(countSize)
+        self.countLabel.setStyleSheet("color:grey")
 
-
+        # 上传文件入口
+        self.uploadFileLabel = MyActionLabel(self)
+        self.uploadFileLabel.setGeometry(55,20,50,60)
+        self.uploadFileLabel.setCursor(Qt.Qt.PointingHandCursor)
+        self.uploadFileLabel.setToolTip('上传文件')
+        uploadHtml = '''
+        <img src = '../ICO/文档.png' height = '22' weight = '12' style = 'vertical-top;'>'''
+        self.uploadFileLabel.setText(uploadHtml)
 
         # 转换按钮
         self.label = MyActionLabel(self)
@@ -53,9 +63,9 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setGeometry(QtCore.QRect(420, 153, 151, 30))
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
+        self.comboBox.addItem("         英语")
+        self.comboBox.addItem("         日语")
+        self.comboBox.addItem("         中文")
 
         # 译文文本框
         self.translateText = QtWidgets.QPlainTextEdit(self.centralwidget)
@@ -95,6 +105,3 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "英语"))
-        self.comboBox.setItemText(1, _translate("MainWindow", "日语"))
-        self.comboBox.setItemText(2, _translate("MainWindow", "中文"))

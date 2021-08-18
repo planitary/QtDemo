@@ -1,11 +1,13 @@
 # coding:gbk
 import sys
-from PyQt5.QtWidgets import  QMessageBox, QApplication
+from PyQt5 import QtWidgets
 from PyQt5.QtGui import QTextCursor
-from PyQt5.QtCore import QCoreApplication
-from Controller.DController import LoginController,RegController
-from UI import LoginUI, RegisterUI,TranslateUI
+from PyQt5.QtWidgets import QMessageBox, QApplication, QFileDialog
+from PyQt5 import QtGui, QtCore
+from Controller.DController import LoginController, RegController
+from UI import LoginUI, RegisterUI, TranslateUI
 from Extra.core import translate
+
 
 class Login(LoginUI.LoginForm):
     def __init__(self):
@@ -27,7 +29,7 @@ class Login(LoginUI.LoginForm):
         elif user != '' and pwd == '':
             msg_box = QMessageBox(QMessageBox.Warning, '提示', '请输入密码')
             msg_box.exec_()
-        elif user =='' and pwd != '':
+        elif user == '' and pwd != '':
             msg_box = QMessageBox(QMessageBox.Warning, '提示', '请输入用户名')
             msg_box.exec_()
         if user != '' and pwd != '':
@@ -77,7 +79,7 @@ class Reg(RegisterUI.Reg):
         elif user == '' and pwd != '':
             msg_box = QMessageBox(QMessageBox.Warning, '提示', '请输入用户名')
             msg_box.exec_()
-        if user !='' and pwd == '':
+        if user != '' and pwd == '':
             msg_box = QMessageBox(QMessageBox.Warning, '提示', '请输入密码')
             msg_box.exec_()
         # 判断两次密码的一致性
@@ -105,25 +107,57 @@ class Reg(RegisterUI.Reg):
         self.LoginEx = Login()
         self.LoginEx.show()
 
-class TranslateWindow(TranslateUI.TranslateMainWindow):
+
+class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit):
     countFlag = -1  # 语种切换位，奇数为目标语言语种，偶数为源语言语种
-    currentText = ''                # 翻译flag，保存combobox选择的语言
+    currentText = ''  # 翻译flag，保存combobox选择的语言
+    isInputFlag = True  # 输入标记位，用于判断文本框内容来自手动输入还是非输入（文件导入，粘贴）
+    MAXSIZE = 8000  # 最大字数
 
     def __init__(self):
         super(TranslateWindow, self).__init__()
         self.setupUi()
         self.translateAction()
 
-
     def translateAction(self):
         self.button.clicked.connect(self.Translate)
         self.label.connectSlot(self.reverse)
         self.copybtn.connectSlot(self.copyTranslate)
         self.plainTextEdit.textChanged.connect(self.countText)
+        self.uploadFileLabel.connectSlot(self.uploadFile)
 
+    @classmethod
+    # 截取文本，限制字数
+    def isCut(cls, text):
+        size = len(text)
+        if size > cls.MAXSIZE:
+            msg_box = QMessageBox(QMessageBox.Information, '提示', '超出最大字数限制，将自动截取文本')
+            msg_box.exec_()
+            text = text[0:cls.MAXSIZE]
+            return text
+        return text
 
+    # 上传文件
+    def uploadFile(self):
+        meg_box = QMessageBox(QMessageBox.Information, '提示', '请上传.txt、.pdf文档')
+        meg_box.exec_()
+        # 指定文件格式
+        fname = QFileDialog.getOpenFileName(self, '选择文件', '/Users/admin/Desktop', filter="PDF文件(*.pdf)"
+                                                                                         ";;Text文档(*.txt)")
+        print(fname)
+        if fname[0]:
+            f = open(fname[0], 'r', encoding='utf-8')
+            with f:
+                data = f.read()
+                originalText = self.isCut(data)
+                self.isInputFlag = False
+                self.plainTextEdit.setPlainText(originalText)
+                textCursor = self.plainTextEdit.textCursor()  # 获取文本框指针对象
+                textCursor.movePosition(QTextCursor.End)  # 将指针移动到末尾
+                self.plainTextEdit.setTextCursor(textCursor)
+
+    # 判断当前下拉框的值,新增语言时请在这里添加新的逻辑判断
     def getComboText(self):
-        # 判断当前下拉框得值
         if self.comboBox.currentText() == '英语':
             self._language = 'en'
         elif self.comboBox.currentText() == '日语':
@@ -132,10 +166,10 @@ class TranslateWindow(TranslateUI.TranslateMainWindow):
             self._language = 'zh-CN'
         return self._language
 
+    # 获取文本框内的内容
     def Translate(self):
-        # 获取文本框内的内容
-        originalText = self.plainTextEdit.toPlainText()
-
+        originalText_ = self.plainTextEdit.toPlainText()
+        originalText = self.isCut(originalText_)
         if originalText != '':
             # """这个方法访问过慢，偶尔会遇到429的异常(备用版本)"""
             # # print(originalText)
@@ -150,7 +184,7 @@ class TranslateWindow(TranslateUI.TranslateMainWindow):
             方法使用：第一个参数为要翻译的文字，第二个为目标语言，第三个为源语言，不输入则会自动识别
             传参的语言缩写见static目录下的languageList文件"""
             language = self.getComboText()
-            target = translate(originalText,language)
+            target = translate(originalText, language)
             self.translateText.setPlainText(target)
             self.currentText = self.comboBox.currentText()
         else:
@@ -166,9 +200,11 @@ class TranslateWindow(TranslateUI.TranslateMainWindow):
         else:
             self.comboBox.setCurrentText(self.currentText)
         original = self.translateText.toPlainText()
+        # original = self.isCut(original_)
         self.plainTextEdit.setPlainText(original)
         reverseLanguage = self.getComboText()
-        target = translate(original,reverseLanguage)
+        target = translate(original, reverseLanguage)
+        self.isInputFlag = False
         self.translateText.setPlainText(target)
 
     # 复制译文
@@ -180,29 +216,26 @@ class TranslateWindow(TranslateUI.TranslateMainWindow):
         else:
             clipBoard = QApplication.clipboard()
             clipBoard.setText(text)
-            msgBox = QMessageBox(QMessageBox.Information,'提示','译文已复制')
+            msgBox = QMessageBox(QMessageBox.Information, '提示', '译文已复制')
             msgBox.exec_()
 
-    # 字数统计
+    # 字数统计以及文本框动态逻辑判断
     def countText(self):
-        originalText = self.plainTextEdit.toPlainText()
-        size = len(originalText)
-        if size == 0:
-            self.countLabel.setVisible(False)
-        else:
-            self.countLabel.setVisible(True)
-            countSize = str(size) + '/5000'
-            self.countLabel.setText(countSize)
-            self.countLabel.setStyleSheet("color:grey")
-            if size > 5000:
-                textCursor = self.plainTextEdit.textCursor()    # 获取文本框指针对象
-                # textCursor.movePosition(QTextCursor.End)                # 将指针移动到末尾
-                """这里不使用deleteChar的原因是因为：
-                删除指针所指位置的前一个字符,当达到最大字符时，此时无论指针在哪，再次输入会使得文本长度+1,此时指针会移动到+2的位置
-                """
-                textCursor.deletePreviousChar()
-                msgBox = QMessageBox(QMessageBox.Warning,'提示','超出最大字数限制!')
-                msgBox.exec_()
+        originalText_ = self.plainTextEdit.toPlainText()
+        size = len(originalText_)
+        countSize = str(size) + '/9999'
+        self.countLabel.setText(countSize)
+        self.countLabel.setStyleSheet("color:grey")
+        if size > self.MAXSIZE:
+            # """这里不使用deleteChar的原因是因为：
+            # 删除指针所指位置的前一个字符,当达到最大字符时，此时无论指针在哪，再次输入会使得文本长度+1,此时指针会移动到+2的位置
+            # """
+            # textCursor.deletePreviousChar()
+            originalText = self.isCut(originalText_)
+            self.plainTextEdit.setPlainText(originalText)
+            textCursor = self.plainTextEdit.textCursor()  # 获取文本框指针对象
+            textCursor.movePosition(QTextCursor.End)  # 将指针移动到末尾
+            self.plainTextEdit.setTextCursor(textCursor)
 
 
 if __name__ == '__main__':
