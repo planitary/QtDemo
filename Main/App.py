@@ -1,8 +1,7 @@
 # coding:gbk
-import sys
-from PyQt5 import QtWidgets
+import sys,langid
 from PyQt5.QtGui import QTextCursor
-from PyQt5.QtWidgets import QMessageBox, QApplication, QFileDialog
+from PyQt5.QtWidgets import QMessageBox, QApplication, QFileDialog,QPushButton
 from PyQt5 import QtGui, QtCore
 from Controller.DController import LoginController, RegController
 from UI import LoginUI, RegisterUI, TranslateUI
@@ -46,9 +45,24 @@ class Login(LoginUI.LoginForm):
                 msg_box.exec_()
                 self.pwdEdit.clear()
             else:
-                msg = '欢迎%s' % user
-                welcomeBox = QMessageBox(QMessageBox.Information, '欢迎', msg)
-                welcomeBox.exec()
+                authorized = loginEx.getToken()
+                if authorized == '':
+                    invalidBox = QMessageBox()
+                    invalidBox.setWindowTitle('警告')
+                    invalidBox.setText('<h3>未授权用户，无权操作!</h3>')
+                    invalidBox.addButton(QPushButton('好的'),QMessageBox.YesRole)
+                    messagePix = QtGui.QPixmap('../ICO/警告.png')
+                    scaredPix = messagePix.scaled(30,30)
+
+                    invalidBox.setIconPixmap(scaredPix)                # QmessageBox自定义图标
+                    invalidBox.exec_()
+                else:
+                    msg = '欢迎%s' % user
+                    welcomeBox = QMessageBox(QMessageBox.Information, '欢迎', msg)
+                    welcomeBox.exec()
+                    self.close()
+                    self.translate = TranslateWindow()
+                    self.translate.show()
 
     def goingToRegisterWindow(self):
         """由于窗口在当前类中循环，所以新窗口需要实例化到当前类中"""
@@ -108,7 +122,7 @@ class Reg(RegisterUI.Reg):
         self.LoginEx.show()
 
 
-class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit):
+class TranslateWindow(TranslateUI.TranslateMainWindow):
     countFlag = -1  # 语种切换位，奇数为目标语言语种，偶数为源语言语种
     currentText = ''  # 翻译flag，保存combobox选择的语言
     isInputFlag = True  # 输入标记位，用于判断文本框内容来自手动输入还是非输入（文件导入，粘贴）
@@ -144,7 +158,6 @@ class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit)
         # 指定文件格式
         fname = QFileDialog.getOpenFileName(self, '选择文件', '/Users/admin/Desktop', filter="PDF文件(*.pdf)"
                                                                                          ";;Text文档(*.txt)")
-        print(fname)
         if fname[0]:
             f = open(fname[0], 'r', encoding='utf-8')
             with f:
@@ -165,6 +178,23 @@ class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit)
         elif self.comboBox.currentText() == '中文':
             self._language = 'zh-CN'
         return self._language
+
+    """设置下拉框的值，用于转换语言
+    @:param language:要改变下拉框值的语言，注意是语言缩写，例如：zh:中文，en:英文，ja:日语...
+    """
+    def setComboText(self,language):
+        if language == 'en':
+            self.comboBox.setCurrentText('英语')
+        elif language == 'zh':
+            self.comboBox.setCurrentText('中文')
+        elif language == 'ja':
+            self.comboBox.setCurrentText('日语')
+
+    """检测源语言语种
+    @:param text:要检测的文本"""
+    def detectOriginal(self,text):
+        languageS = langid.classify(text)
+        return languageS
 
     # 获取文本框内的内容
     def Translate(self):
@@ -190,22 +220,35 @@ class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit)
         else:
             self.plainTextEdit.setPlaceholderText('您还没有输入内容')
 
-    # 转换目标语言与源语言 （如果要转换的文字为中文，则无法实现源语言与目标语言在不切换时的转换，要实现需要获取源语言的currentText
-    #
-    # 在translate方法中，无法获取到自动检测到的源语言，所以此功能暂时还不完善
+    """转换目标语言与源语言
+    第一次转换时会有点满"""
     def reverse(self):
-        self.countFlag += 1
-        if self.countFlag % 2 == 0:
-            self.comboBox.setCurrentText('中文')
-        else:
-            self.comboBox.setCurrentText(self.currentText)
-        original = self.translateText.toPlainText()
-        # original = self.isCut(original_)
-        self.plainTextEdit.setPlainText(original)
-        reverseLanguage = self.getComboText()
-        target = translate(original, reverseLanguage)
-        self.isInputFlag = False
+        # reverseLang = self.getComboText()
+        # print(reverseLang)
+        originalTxt = self.plainTextEdit.toPlainText()                      # 取得转换前的源语言
+        originalLang = self.detectOriginal(originalTxt)[0]                  # 判断源语言语种
+        tranTxt = self.translateText.toPlainText()                      # 取得转换前的译文
+        # print(originalLang)
+        self.setComboText(originalLang)                         # 设置下拉框为源语言语种（之前为翻译的语种）
+        target = translate(tranTxt,originalLang)
+        self.plainTextEdit.setPlainText(tranTxt)
         self.translateText.setPlainText(target)
+        # originalTxt = self.plainTextEdit.toPlainText()
+        # originalLanguage = self.detectOriginal(originalTxt)[0]
+        # print(originalLanguage)
+        #
+        # self.countFlag += 1
+        # if self.countFlag % 2 == 0:
+        #     self.setComboText(originalLanguage)
+        # else:
+        #     self.comboBox.setCurrentText(self.currentText)
+        # original = self.translateText.toPlainText()
+        # # original = self.isCut(original_)
+        # self.plainTextEdit.setPlainText(original)
+        # reverseLanguage = self.getComboText()
+        # target = translate(original, reverseLanguage)
+        # self.isInputFlag = False
+        # self.translateText.setPlainText(target)
 
     # 复制译文
     def copyTranslate(self):
@@ -223,7 +266,7 @@ class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit)
     def countText(self):
         originalText_ = self.plainTextEdit.toPlainText()
         size = len(originalText_)
-        countSize = str(size) + '/9999'
+        countSize = str(size) + '/8000'
         self.countLabel.setText(countSize)
         self.countLabel.setStyleSheet("color:grey")
         if size > self.MAXSIZE:
@@ -240,8 +283,8 @@ class TranslateWindow(TranslateUI.TranslateMainWindow, QtWidgets.QPlainTextEdit)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    # ex = Login()
-    ex = TranslateWindow()
+    ex = Login()
+    # ex = TraslateWindow()
     ex.show()
     # RegEx = Reg()
     # RegEx.show()

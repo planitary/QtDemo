@@ -29,7 +29,7 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
         # 源文本框字数统计标签
         self.countLabel = QtWidgets.QLabel(self.centralwidget)
         self.countLabel.setGeometry(640,153,70,30)
-        countSize = '0/9999'
+        countSize = '0/8000'
         self.countLabel.setText(countSize)
         self.countLabel.setStyleSheet("color:grey")
 
@@ -63,9 +63,9 @@ class TranslateMainWindow(QtWidgets.QMainWindow):
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setGeometry(QtCore.QRect(420, 153, 151, 30))
         self.comboBox.setObjectName("comboBox")
-        self.comboBox.addItem("         英语")
-        self.comboBox.addItem("         日语")
-        self.comboBox.addItem("         中文")
+        self.comboBox.addItem("英语")
+        self.comboBox.addItem("日语")
+        self.comboBox.addItem("中文")
 
         # 译文文本框
         self.translateText = QtWidgets.QPlainTextEdit(self.centralwidget)

@@ -9,6 +9,7 @@ class LoginController:
     # 状态字段，用于返回判断登录状态
     isPwd = False                       # 用户存在
     isUserName = False                      # 密码存在且匹配
+    _token = ''              # 用户鉴权
 
     def __init__(self,user,pwd):
         self.user = user
@@ -40,7 +41,7 @@ class LoginController:
         hashPwd.update(pwd_.encode('utf8'))
         pwd = hashPwd.hexdigest()
         # print(pwd)
-        checkUserByNameAndPwdSql = "select name,password from users where name = '%s'" % user
+        checkUserByNameAndPwdSql = "select name,password,token from users where name = '%s'" % user
         cur.execute(checkUserByNameAndPwdSql)
         findResult = cur.fetchone()
         # print(findResult[3])
@@ -49,6 +50,7 @@ class LoginController:
             self.isUserName = True
             if pwd == findResult[1]:
                 self.isPwd = True
+                self._token = findResult[2]
             else:
                 self.isPwd = False
         else:
@@ -56,6 +58,12 @@ class LoginController:
 
     def getStatus(self):
         return self.isUserName,self.isPwd
+
+    def getToken(self):
+        return self._token
+
+
+
 
 class RegController:
     userToken = ''

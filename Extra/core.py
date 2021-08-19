@@ -81,11 +81,17 @@ def translate(to_translate, to_language="auto", from_language="auto"):
         link = base_link % (to_language, from_language, to_translate)
         request = urllib.request.Request(link, headers=agent)
         raw_data = urllib.request.urlopen(request).read()
+
     data = raw_data.decode("utf-8")
     expr = r'(?s)class="(?:t0|result-container)">(.*?)<'
+    lng = r'(?s)class = "(?:t0|sl-and-tl)">(.*?)<'
     re_result = re.findall(expr, data)
     if (len(re_result) == 0):
         result = ""
     else:
         result = unescape(re_result[0])
-    return (result)
+    return result
+
+# if __name__ == '__main__':
+#     rf = translate('你好','en')
+#     print(rf)
